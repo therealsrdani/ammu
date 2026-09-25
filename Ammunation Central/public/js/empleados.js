@@ -8,7 +8,7 @@ const empleadoInfo =
 let empleadoActual = null;
 
 const permisosPorRango = {
-    Gerente: [
+    Jefe: [
         "verEmpleados",
         "crearEmpleado",
         "verProductos",
@@ -19,7 +19,7 @@ const permisosPorRango = {
         "verFormularios",
         "crearFormulario"
     ],
-    Vendedor: [
+    Encargado: [
         "verProductos",
         "crearProductos",
         "verStock",
@@ -27,7 +27,7 @@ const permisosPorRango = {
         "verFormularios",
         "crearFormulario"
     ],
-    Recepcionista: [
+    Empleado: [
         "verProductos",
         "verFormularios",
         "crearFormulario"
@@ -41,6 +41,26 @@ function tienePermiso(permiso) {
 
     const permisos = permisosPorRango[empleadoActual.rango] || [];
     return permisos.includes(permiso);
+}
+
+function mostrarErrorPanel(mensaje) {
+    contenido.innerHTML = `
+        <div class="card estado-error">
+            <h2>No se puede abrir esta sección</h2>
+            <p>${mensaje}</p>
+        </div>
+    `;
+}
+
+async function obtenerJson(url, opciones) {
+    const respuesta = await fetch(url, opciones);
+    const datos = await respuesta.json();
+
+    if (!respuesta.ok) {
+        throw new Error(datos.error || "No se pudo completar la operación.");
+    }
+
+    return datos;
 }
 
 async function comprobarSesion() {
@@ -66,6 +86,10 @@ async function comprobarSesion() {
         <br>
         ${datos.empleado.rango}
     `;
+
+    document.querySelectorAll("[data-permission]").forEach(boton => {
+        boton.hidden = !tienePermiso(boton.dataset.permission);
+    });
 
     if (datos.empleado.passwordTemporal) {
         mostrarCambioClave();
@@ -102,16 +126,20 @@ function mostrarSeccion(seccion) {
 async function mostrarCambioClave() {
     titulo.textContent = "Cambiar contraseña";
 
+    const requierePasswordActual = Boolean(empleadoActual && !empleadoActual.passwordTemporal);
+
     contenido.innerHTML = `
         <div class="card">
             <h2>Primera vez en el sistema</h2>
             <p>Debes cambiar tu contraseña para continuar.</p>
 
             <form id="cambiarPasswordForm" class="form-grid">
-                <div class="form-group">
-                    <label>Contraseña actual</label>
-                    <input type="password" id="passwordActual" placeholder="Contraseña actual" required>
-                </div>
+                ${requierePasswordActual ? `
+                    <div class="form-group">
+                        <label>Contraseña actual</label>
+                        <input type="password" id="passwordActual" placeholder="Contraseña actual" required>
+                    </div>
+                ` : ""}
 
                 <div class="form-group">
                     <label>Nueva contraseña</label>
@@ -133,7 +161,8 @@ async function mostrarCambioClave() {
     document.getElementById("cambiarPasswordForm").addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        const passwordActual = document.getElementById("passwordActual").value;
+        const passwordActualInput = document.getElementById("passwordActual");
+        const passwordActual = passwordActualInput ? passwordActualInput.value : "";
         const passwordNueva = document.getElementById("passwordNueva").value;
         const confirmarPassword = document.getElementById("confirmarPassword").value;
 
@@ -196,11 +225,13 @@ async function mostrarStock() {
 
     titulo.textContent = "Stock";
 
-    const respuesta =
-        await fetch("/api/productos");
-
-    const productos =
-        await respuesta.json();
+    let productos;
+    try {
+        productos = await obtenerJson("/api/productos");
+    } catch (error) {
+        mostrarErrorPanel(error.message);
+        return;
+    }
 
     let filas = "";
 
@@ -286,9 +317,17 @@ async function mostrarStock() {
 
                             <th>
                                 Cantidad
-                            </th>
+                                    "verEmpleados", // Cambiar Gerente a Jefe
+                                    "crearEmpleado",
+                                    "verProductos",
+                                    "crearProductos",
+                                    "eliminarProductos",
+                                    "verStock",
+                                    "editarStock",
+                                    "verFormularios",
+                                    "crearFormulario"
 
-                            <th>
+                                Jefe: [
                                 Modificar
                             </th>
 
@@ -296,7 +335,7 @@ async function mostrarStock() {
 
                     </thead>
 
-
+                                Encargado: [
                     <tbody>
 
                         ${filas}
@@ -304,11 +343,11 @@ async function mostrarStock() {
                     </tbody>
 
                 </table>
-
+                                const rango = prompt("Rango (Jefe, Encargado, Empleado):", empleado.rango);
             </div>
-
-        </div>
-
+                                                <option value="Encargado">Encargado</option>
+                                                <option value="Empleado">Empleado</option>
+                                                <option value="Jefe">Jefe</option>
     `;
 
 }
@@ -353,11 +392,13 @@ async function mostrarProductos() {
 
     titulo.textContent = "Productos";
 
-    const respuesta =
-        await fetch("/api/productos");
-
-    const productos =
-        await respuesta.json();
+    let productos;
+    try {
+        productos = await obtenerJson("/api/productos");
+    } catch (error) {
+        mostrarErrorPanel(error.message);
+        return;
+    }
 
     let filas = "";
 
@@ -596,14 +637,13 @@ async function mostrarFormularios() {
         "Formularios";
 
 
-    const respuesta =
-        await fetch(
-            "/api/formularios"
-        );
-
-
-    const formularios =
-        await respuesta.json();
+    let formularios;
+    try {
+        formularios = await obtenerJson("/api/formularios");
+    } catch (error) {
+        mostrarErrorPanel(error.message);
+        return;
+    }
 
 
     let filas = "";
@@ -822,11 +862,13 @@ async function mostrarEmpleados() {
 
     titulo.textContent = "Empleados";
 
-    const respuesta =
-        await fetch("/api/empleados");
-
-    const empleados =
-        await respuesta.json();
+    let empleados;
+    try {
+        empleados = await obtenerJson("/api/empleados");
+    } catch (error) {
+        mostrarErrorPanel(error.message);
+        return;
+    }
 
     const permisosHtml = Object.entries(permisosPorRango).map(([rango, permisos]) => `
         <div class="permiso-card">

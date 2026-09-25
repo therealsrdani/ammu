@@ -44,23 +44,34 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
     session({
-        secret: "clave-secreta-comercio-juego",
+        secret: process.env.SESSION_SECRET || "clave-secreta-comercio-juego",
         resave: false,
         saveUninitialized: false,
         cookie: {
-            maxAge: 1000 * 60 * 60 * 8
+            maxAge: 1000 * 60 * 60 * 8,
+            httpOnly: true,
+            sameSite: "lax",
+            secure: process.env.NODE_ENV === "production"
         }
     })
 );
 
+app.use((error, req, res, next) => {
+    if (error instanceof SyntaxError && error.status === 400 && "body" in error) {
+        return res.status(400).json({
+            error: "La petición contiene JSON no válido."
+        });
+    }
+
+    next(error);
+});
+
 /* -------------------------
    ARCHIVOS PÚBLICOS
-   Sirve tanto la carpeta public como la raíz para cubrir las rutas
-   de la web y evitar errores si se accede desde cualquiera de las dos estructuras.
+    La carpeta public es la única superficie web pública.
 ------------------------- */
 
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.static(__dirname));
 app.use("/public", express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
@@ -172,7 +183,7 @@ app.post("/api/logout", (req, res) => {
    MIDDLEWARE EMPLEADO
 ------------------------- */
 
-function comprobarEmpleado(req, res, next) {
+function comprobarSesion(req, res, next) {
 
     if (!req.session.empleado) {
         return res.status(401).json({
@@ -181,6 +192,18 @@ function comprobarEmpleado(req, res, next) {
     }
 
     next();
+}
+
+function comprobarEmpleado(req, res, next) {
+    comprobarSesion(req, res, () => {
+        if (req.session.empleado.passwordTemporal) {
+            return res.status(403).json({
+                error: "Debes cambiar tu contraseña antes de continuar."
+            });
+        }
+
+        next();
+    });
 }
 
 /* -------------------------
@@ -204,9 +227,20 @@ app.post("/api/productos", comprobarEmpleado, comprobarPermiso("crearProductos")
         stock
     } = req.body;
 
-    if (!nombre) {
+    const nombreNormalizado = String(nombre || "").trim();
+    const precioNormalizado = Number(precio);
+    const stockNormalizado = Number(stock);
+
+    if (!nombreNormalizado) {
         return res.status(400).json({
             error: "El producto necesita un nombre."
+        });
+    }
+
+    if (!Number.isFinite(precioNormalizado) || precioNormalizado < 0 ||
+        !Number.isFinite(stockNormalizado) || stockNormalizado < 0) {
+        return res.status(400).json({
+            error: "El precio y el stock deben ser números válidos y no negativos."
         });
     }
 
@@ -216,10 +250,10 @@ app.post("/api/productos", comprobarEmpleado, comprobarPermiso("crearProductos")
 
     const producto = {
         id: nuevoId,
-        nombre: nombre,
-        categoria: categoria || "",
-        precio: Number(precio) || 0,
-        stock: Number(stock) || 0
+        nombre: nombreNormalizado,
+        categoria: String(categoria || "").trim(),
+        precio: precioNormalizado,
+        stock: stockNormalizado
     };
 
     datos.productos.push(producto);
@@ -263,7 +297,7 @@ app.patch("/api/stock/:id", comprobarEmpleado, comprobarPermiso("editarStock"), 
 
     const cantidad = Number(req.body.cantidad);
 
-    if (Number.isNaN(cantidad)) {
+    if (!Number.isFinite(cantidad)) {
         return res.status(400).json({
             error: "Cantidad incorrecta."
         });
@@ -499,7 +533,7 @@ app.delete("/api/empleados/:id", comprobarEmpleado, comprobarPermiso("crearEmple
     });
 });
 
-app.post("/api/empleados/cambiar-password", comprobarEmpleado, async (req, res) => {
+app.post("/api/empleados/cambiar-password", comprobarSesion, async (req, res) => {
     const { passwordActual, passwordNueva, confirmarPassword } = req.body;
 
     const empleado = datos.empleados.find(

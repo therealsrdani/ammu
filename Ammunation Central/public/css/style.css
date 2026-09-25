@@ -246,3 +246,41 @@ body {
     }
 
 }
+
+:root {
+    --acento: #ff4469;
+    --borde: rgba(255, 255, 255, 0.1);
+    --panel: rgba(21, 22, 25, 0.92);
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: radial-gradient(circle at 15% 0%, #2a202a 0, #111416 48%);
+}
+
+.header {
+    background: rgba(21, 22, 25, 0.96);
+    border-color: var(--borde);
+}
+
+.logo {
+    color: var(--acento);
+}
+
+.acceso {
+    background: var(--panel);
+    border-color: var(--borde);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+    transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.acceso:hover {
+    background: rgba(255, 68, 105, 0.1);
+    border-color: rgba(255, 68, 105, 0.5);
+    transform: translateY(-5px);
+}
+
+.acceso-icono,
+.acceso span {
+    color: var(--acento);
+}

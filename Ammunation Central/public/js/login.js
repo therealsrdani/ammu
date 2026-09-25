@@ -43,11 +43,6 @@ formulario.addEventListener("submit", async (event) => {
             return;
         }
 
-        if (datos.requiereCambio) {
-            error.textContent =
-                "Primera vez iniciando sesión. Cambia tu contraseña desde el panel.";
-        }
-
         const paginaActual = window.location.pathname;
         const destino = paginaActual.includes("/public/")
             ? "./empleados.html"

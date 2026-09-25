@@ -49,12 +49,18 @@ function cargar() {
         });
     }
 
+    const rangosAntiguos = {
+        Gerente: "Jefe",
+        Vendedor: "Encargado",
+        Recepcionista: "Empleado"
+    };
+
     datos.empleados = datos.empleados.map(empleado => ({
         id: empleado.id || 1,
         usuario: empleado.usuario || "",
         password: empleado.password || bcrypt.hashSync("123456", 10),
         nombre: empleado.nombre || "Empleado",
-        rango: empleado.rango || "Vendedor",
+        rango: rangosAntiguos[empleado.rango] || empleado.rango || "Encargado",
         passwordTemporal: Boolean(empleado.passwordTemporal)
     }));
 

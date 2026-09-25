@@ -11,10 +11,10 @@
     {
       "id": 2,
       "usuario": "alex",
-      "password": "$2b$10$3hy2juNGmRFQIEl4KWEJNe.mKql1IGQMOAh33j9NzRCrY5QM3UcH.",
+      "password": "$2b$10$rdeRYEPg2rV0rbOiK2tc8e39o0YMrOpq8c8OaXQO3dXkS2cXU3DZG",
       "nombre": "Alex Guerra",
       "rango": "Jefe",
-      "passwordTemporal": true
+      "passwordTemporal": false
     },
     {
       "id": 3,

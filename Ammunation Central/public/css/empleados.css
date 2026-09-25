@@ -510,3 +510,107 @@ td {
     }
 
 }
+
+:root {
+    --fondo: #111416;
+    --panel: rgba(21, 22, 25, 0.96);
+    --panel-suave: rgba(255, 255, 255, 0.06);
+    --borde: rgba(255, 255, 255, 0.1);
+    --texto: #f2f2f2;
+    --muted: #a9adb3;
+    --acento: #ff4469;
+    --acento-suave: rgba(255, 68, 105, 0.14);
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: radial-gradient(circle at 10% 0%, #25202a 0, var(--fondo) 42%);
+    color: var(--texto);
+}
+
+.sidebar,
+.topbar,
+.card {
+    background: var(--panel);
+    border-color: var(--borde);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+}
+
+.logo,
+.topbar h1,
+.card h2 {
+    letter-spacing: 0.01em;
+}
+
+.logo {
+    color: var(--acento);
+}
+
+.empleado-info,
+.card p {
+    color: var(--muted);
+}
+
+.sidebar nav button,
+.sidebar-bottom button {
+    color: var(--muted);
+    transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.sidebar nav button:hover,
+.sidebar-bottom button:hover {
+    background: var(--acento-suave);
+    color: var(--texto);
+    transform: translateX(3px);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    border-color: var(--borde);
+    background: var(--panel-suave);
+    outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--acento);
+    box-shadow: 0 0 0 3px var(--acento-suave);
+}
+
+.action-button {
+    background: var(--acento);
+    color: #170b0f;
+    transition: transform 160ms ease, filter 160ms ease;
+}
+
+.action-button:hover {
+    filter: brightness(1.12);
+    transform: translateY(-1px);
+}
+
+.estado-error {
+    border-color: rgba(255, 68, 105, 0.5);
+}
+
+@media (max-width: 720px) {
+    .sidebar {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+    }
+
+    .sidebar nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sidebar nav button,
+    .sidebar-bottom button {
+        text-align: center;
+    }
+
+    .topbar h1 {
+        font-size: 18px;
+    }
+}
