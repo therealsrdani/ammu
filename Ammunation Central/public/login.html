@@ -21,87 +21,52 @@
 
 
 <body>
+    <div class="app-shell">
+        <aside class="sidebar" aria-label="Navegación lateral">
+            <div class="sidebar-icon">◫</div>
+            <div class="sidebar-icon">◧</div>
+            <div class="sidebar-icon">✦</div>
+            <div class="sidebar-icon">◍</div>
+            <div class="sidebar-icon">◐</div>
+            <div class="sidebar-icon">◔</div>
+            <div class="sidebar-icon">◕</div>
+            <div class="sidebar-icon last">◌</div>
+        </aside>
 
+        <main class="main-panel">
+            <div class="page-header">
+                <div class="brand-icon">◉</div>
+                <h1 class="brand">COMERCIO</h1>
+            </div>
 
-<div class="login-container">
+            <section class="login-section">
+                <h2>Acceso de empleados</h2>
+                <p>Introduce tus credenciales.</p>
 
+                <form id="loginForm" class="login-form">
+                    <div class="login-form-row">
+                        <div class="field">
+                            <label for="usuario">Usuario</label>
+                            <input type="text" id="usuario" placeholder="Usuario" required>
+                        </div>
 
-    <div class="login-box">
+                        <div class="field">
+                            <label for="password">Contraseña</label>
+                            <input type="password" id="password" placeholder="Contraseña" required>
+                        </div>
 
+                        <button type="submit">Iniciar sesión</button>
+                    </div>
 
-        <div class="logo">
-            COMERCIO
-        </div>
+                    <p id="error" class="error"></p>
+                </form>
 
-
-        <h1>
-            Acceso de empleados
-        </h1>
-
-
-        <p class="descripcion">
-            Introduce tus credenciales.
-        </p>
-
-
-        <form id="loginForm">
-
-
-            <label for="usuario">
-                Usuario
-            </label>
-
-            <input
-                type="text"
-                id="usuario"
-                placeholder="Usuario"
-                required
-            >
-
-
-            <label for="password">
-                Contraseña
-            </label>
-
-            <input
-                type="password"
-                id="password"
-                placeholder="Contraseña"
-                required
-            >
-
-
-            <button type="submit">
-                Iniciar sesión
-            </button>
-
-
-            <p
-                id="error"
-                class="error"
-            ></p>
-
-
-        </form>
-
-
-        <a
-            href="./index.html"
-            class="volver"
-        >
-            ← Volver
-        </a>
-
-
+                <a href="./index.html" class="volver">← Volver</a>
+            </section>
+        </main>
     </div>
 
-
-</div>
-
-
-<script src="./js/login.js"></script>
-
-
+    <script src="./js/login.js"></script>
 </body>
 
 </html>
