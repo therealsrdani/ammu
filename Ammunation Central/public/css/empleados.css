@@ -9,6 +9,10 @@
 }
 
 
+html {
+    font-size: 16px;
+}
+
 body {
 
     min-height: 100vh;
@@ -28,6 +32,64 @@ body {
 
     min-height: 100vh;
 
+}
+
+
+.permisos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(180px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+}
+
+.permiso-card {
+    background: #101010;
+    border: 1px solid #2c2c2c;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.permiso-card h3 {
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
+.permiso-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.permiso-card li {
+    color: #d9d9d9;
+    font-size: 13px;
+    background: #191919;
+    border: 1px solid #2c2c2c;
+    border-radius: 6px;
+    padding: 8px 10px;
+}
+
+.estado-clave {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 0.02em;
+}
+
+.estado-clave.temporal {
+    background: #4d2a00;
+    color: #ffca6d;
+}
+
+.estado-clave.ok {
+    background: #1d3d2d;
+    color: #8fe3b6;
 }
 
 
@@ -378,19 +440,73 @@ td {
 }
 
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
 
-    .sidebar {
-
-        width: 190px;
-
+    .app {
+        flex-direction: column;
     }
 
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #2c2c2c;
+    }
+
+    .sidebar nav {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(140px, 1fr));
+    }
+
+    #contenido {
+        padding: 20px;
+    }
+
+    .permisos-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .sidebar nav {
+        grid-template-columns: 1fr;
+    }
+
+    .topbar {
+        padding: 0 18px;
+        height: 60px;
+    }
+
+    #contenido {
+        padding: 14px;
+    }
+
+    .card {
+        padding: 16px;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
 
     .form-grid {
-
         grid-template-columns: 1fr;
+    }
 
+    th,
+    td {
+        white-space: nowrap;
+        padding: 10px 8px;
+    }
+
+    .action-button {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .stock-buttons {
+        flex-direction: column;
     }
 
 }

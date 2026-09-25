@@ -5,7 +5,24 @@
       "usuario": "admin",
       "password": "$2b$10$ILPy8ZnHaSBkKOuu9OFOgutO3p3Qr2CmVoOBb2nPkof4Zn3KzNmQi",
       "nombre": "Administrador",
-      "rango": "Gerente"
+      "rango": "Gerente",
+      "passwordTemporal": false
+    },
+    {
+      "id": 2,
+      "usuario": "ana",
+      "password": "$2b$10$GczSqtWYFc0152cM9t15c.OVVmIkoF1vnjkLCe/K6FrZWaFgHzAYe",
+      "nombre": "Ana Lopez",
+      "rango": "Vendedor",
+      "passwordTemporal": false
+    },
+    {
+      "id": 3,
+      "usuario": "beto",
+      "password": "$2b$10$r29ZjxwfGPzwF55.Fkhezuvfaf6nqtD7vYl5nK6aqVzq7yElg8wdy",
+      "nombre": "Beto Ruiz",
+      "rango": "Recepcionista",
+      "passwordTemporal": true
     }
   ],
   "productos": [

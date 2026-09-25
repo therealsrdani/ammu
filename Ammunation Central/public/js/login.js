@@ -2,22 +2,17 @@ const formulario = document.getElementById("loginForm");
 
 const error = document.getElementById("error");
 
-
 formulario.addEventListener("submit", async (event) => {
 
     event.preventDefault();
 
-
     error.textContent = "";
-
 
     const usuario =
         document.getElementById("usuario").value.trim();
 
-
     const password =
         document.getElementById("password").value;
-
 
     try {
 
@@ -38,24 +33,23 @@ formulario.addEventListener("submit", async (event) => {
             }
         );
 
-
         const datos = await respuesta.json();
 
-
         if (!respuesta.ok) {
-
             error.textContent =
                 datos.error ||
                 "No se ha podido iniciar sesión.";
 
             return;
-
         }
 
+        if (datos.requiereCambio) {
+            error.textContent =
+                "Primera vez iniciando sesión. Cambia tu contraseña desde el panel.";
+        }
 
         window.location.href =
             "empleados.html";
-
 
     } catch (e) {
 

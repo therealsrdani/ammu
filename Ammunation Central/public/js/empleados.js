@@ -5,30 +5,56 @@ const contenido = document.getElementById("contenido");
 const empleadoInfo =
     document.getElementById("empleadoInfo");
 
+let empleadoActual = null;
 
-/* -------------------------
-   COMPROBAR SESIÓN
-------------------------- */
+const permisosPorRango = {
+    Gerente: [
+        "verEmpleados",
+        "crearEmpleado",
+        "verProductos",
+        "crearProductos",
+        "eliminarProductos",
+        "verStock",
+        "editarStock",
+        "verFormularios",
+        "crearFormulario"
+    ],
+    Vendedor: [
+        "verProductos",
+        "crearProductos",
+        "verStock",
+        "editarStock",
+        "verFormularios",
+        "crearFormulario"
+    ],
+    Recepcionista: [
+        "verProductos",
+        "verFormularios",
+        "crearFormulario"
+    ]
+};
+
+function tienePermiso(permiso) {
+    if (!empleadoActual || !empleadoActual.rango) {
+        return false;
+    }
+
+    const permisos = permisosPorRango[empleadoActual.rango] || [];
+    return permisos.includes(permiso);
+}
 
 async function comprobarSesion() {
 
     const respuesta =
         await fetch("/api/sesion");
 
-
     if (!respuesta.ok) {
-
-        window.location.href =
-            "login.html";
-
+        window.location.href = "login.html";
         return;
-
     }
 
-
-    const datos =
-        await respuesta.json();
-
+    const datos = await respuesta.json();
+    empleadoActual = datos.empleado;
 
     empleadoInfo.innerHTML = `
         <strong>${datos.empleado.nombre}</strong>
@@ -36,55 +62,100 @@ async function comprobarSesion() {
         ${datos.empleado.rango}
     `;
 
+    if (datos.empleado.passwordTemporal) {
+        mostrarCambioClave();
+        return;
+    }
+
+    mostrarInicio();
 }
-
-
-comprobarSesion();
-
-
-/* -------------------------
-   CAMBIAR SECCIÓN
-------------------------- */
 
 function mostrarSeccion(seccion) {
 
-
     if (seccion === "inicio") {
-
         mostrarInicio();
-
     }
-
 
     if (seccion === "stock") {
-
         mostrarStock();
-
     }
-
 
     if (seccion === "productos") {
-
         mostrarProductos();
-
     }
-
 
     if (seccion === "formularios") {
-
         mostrarFormularios();
-
     }
 
-
     if (seccion === "empleados") {
-
         mostrarEmpleados();
-
     }
 
 }
 
+async function mostrarCambioClave() {
+    titulo.textContent = "Cambiar contraseña";
+
+    contenido.innerHTML = `
+        <div class="card">
+            <h2>Primera vez en el sistema</h2>
+            <p>Debes cambiar tu contraseña para continuar.</p>
+
+            <form id="cambiarPasswordForm" class="form-grid">
+                <div class="form-group">
+                    <label>Contraseña actual</label>
+                    <input type="password" id="passwordActual" placeholder="Contraseña actual" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Nueva contraseña</label>
+                    <input type="password" id="passwordNueva" placeholder="Nueva contraseña" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Confirmar contraseña</label>
+                    <input type="password" id="confirmarPassword" placeholder="Repite la nueva contraseña" required>
+                </div>
+
+                <div class="full">
+                    <button class="action-button" type="submit">Guardar contraseña</button>
+                </div>
+            </form>
+        </div>
+    `;
+
+    document.getElementById("cambiarPasswordForm").addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const passwordActual = document.getElementById("passwordActual").value;
+        const passwordNueva = document.getElementById("passwordNueva").value;
+        const confirmarPassword = document.getElementById("confirmarPassword").value;
+
+        const respuesta = await fetch("/api/empleados/cambiar-password", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                passwordActual,
+                passwordNueva,
+                confirmarPassword
+            })
+        });
+
+        const data = await respuesta.json();
+
+        if (!respuesta.ok) {
+            alert(data.error || "No se pudo cambiar la contraseña.");
+            return;
+        }
+
+        alert(data.mensaje || "Contraseña actualizada correctamente.");
+        empleadoActual.passwordTemporal = false;
+        mostrarInicio();
+    });
+}
 
 /* -------------------------
    INICIO
@@ -93,7 +164,6 @@ function mostrarSeccion(seccion) {
 function mostrarInicio() {
 
     titulo.textContent = "Inicio";
-
 
     contenido.innerHTML = `
 
@@ -113,7 +183,6 @@ function mostrarInicio() {
 
 }
 
-
 /* -------------------------
    STOCK
 ------------------------- */
@@ -122,17 +191,13 @@ async function mostrarStock() {
 
     titulo.textContent = "Stock";
 
-
     const respuesta =
         await fetch("/api/productos");
-
 
     const productos =
         await respuesta.json();
 
-
     let filas = "";
-
 
     productos.forEach(producto => {
 
@@ -161,6 +226,7 @@ async function mostrarStock() {
                                 ${producto.id},
                                 1
                             )"
+                            ${tienePermiso("editarStock") ? "" : "disabled"}
                         >
                             +1
                         </button>
@@ -170,6 +236,7 @@ async function mostrarStock() {
                                 ${producto.id},
                                 -1
                             )"
+                            ${tienePermiso("editarStock") ? "" : "disabled"}
                         >
                             -1
                         </button>
@@ -184,7 +251,6 @@ async function mostrarStock() {
 
     });
 
-
     contenido.innerHTML = `
 
         <div class="card">
@@ -196,7 +262,6 @@ async function mostrarStock() {
             <p>
                 Gestiona las cantidades disponibles.
             </p>
-
 
             <div class="table-container">
 
@@ -283,17 +348,13 @@ async function mostrarProductos() {
 
     titulo.textContent = "Productos";
 
-
     const respuesta =
         await fetch("/api/productos");
-
 
     const productos =
         await respuesta.json();
 
-
     let filas = "";
-
 
     productos.forEach(producto => {
 
@@ -321,9 +382,8 @@ async function mostrarProductos() {
 
                     <button
                         class="action-button danger"
-                        onclick="eliminarProducto(
-                            ${producto.id}
-                        )"
+                        onclick="eliminarProducto(${producto.id})"
+                        ${tienePermiso("eliminarProductos") ? "" : "disabled"}
                     >
                         Eliminar
                     </button>
@@ -336,6 +396,33 @@ async function mostrarProductos() {
 
     });
 
+    const formularioProducto = tienePermiso("crearProductos") ? `
+        <form id="productoForm" class="form-grid">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input id="productoNombre" required>
+            </div>
+
+            <div class="form-group">
+                <label>Categoría</label>
+                <input id="productoCategoria">
+            </div>
+
+            <div class="form-group">
+                <label>Precio</label>
+                <input type="number" id="productoPrecio" step="0.01">
+            </div>
+
+            <div class="form-group">
+                <label>Stock inicial</label>
+                <input type="number" id="productoStock" value="0">
+            </div>
+
+            <div class="full">
+                <button class="action-button" type="submit">Añadir producto</button>
+            </div>
+        </form>
+    ` : "";
 
     contenido.innerHTML = `
 
@@ -345,82 +432,7 @@ async function mostrarProductos() {
                 Productos
             </h2>
 
-
-            <form
-                id="productoForm"
-                class="form-grid"
-            >
-
-                <div class="form-group">
-
-                    <label>
-                        Nombre
-                    </label>
-
-                    <input
-                        id="productoNombre"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Categoría
-                    </label>
-
-                    <input
-                        id="productoCategoria"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Precio
-                    </label>
-
-                    <input
-                        type="number"
-                        id="productoPrecio"
-                        step="0.01"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Stock inicial
-                    </label>
-
-                    <input
-                        type="number"
-                        id="productoStock"
-                        value="0"
-                    >
-
-                </div>
-
-
-                <div class="full">
-
-                    <button
-                        class="action-button"
-                        type="submit"
-                    >
-                        Añadir producto
-                    </button>
-
-                </div>
-
-            </form>
-
+            ${formularioProducto}
 
             <div class="table-container">
 
@@ -469,13 +481,10 @@ async function mostrarProductos() {
 
     `;
 
-
-    document
-        .getElementById("productoForm")
-        .addEventListener(
-            "submit",
-            crearProducto
-        );
+    const productoForm = document.getElementById("productoForm");
+    if (productoForm) {
+        productoForm.addEventListener("submit", crearProducto);
+    }
 
 }
 
@@ -806,24 +815,31 @@ async function guardarFormulario(event) {
 
 async function mostrarEmpleados() {
 
-    titulo.textContent =
-        "Empleados";
-
+    titulo.textContent = "Empleados";
 
     const respuesta =
-        await fetch(
-            "/api/empleados"
-        );
-
+        await fetch("/api/empleados");
 
     const empleados =
         await respuesta.json();
 
+    const permisosHtml = Object.entries(permisosPorRango).map(([rango, permisos]) => `
+        <div class="permiso-card">
+            <h3>${rango}</h3>
+            <ul>
+                ${permisos.map(permiso => `<li>${permiso}</li>`).join("")}
+            </ul>
+        </div>
+    `).join("");
 
     let filas = "";
 
-
     empleados.forEach(empleado => {
+
+        const puedeEditar = tienePermiso("crearEmpleado");
+        const estadoClave = empleado.passwordTemporal
+            ? '<span class="estado-clave temporal">Clave temporal</span>'
+            : '<span class="estado-clave ok">Clave actualizada</span>';
 
         filas += `
 
@@ -841,12 +857,54 @@ async function mostrarEmpleados() {
                     ${empleado.rango}
                 </td>
 
+                <td>
+                    ${estadoClave}
+                </td>
+
+                <td>
+                    ${puedeEditar ? `
+                        <button class="action-button" onclick="editarEmpleado(${empleado.id})">Editar</button>
+                        <button class="action-button danger" onclick="eliminarEmpleado(${empleado.id})">Borrar</button>
+                    ` : ""}
+                </td>
+
             </tr>
 
         `;
 
     });
 
+    const formularioEmpleado = tienePermiso("crearEmpleado") ? `
+        <form id="empleadoForm" class="form-grid" style="margin-top: 20px;">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input id="nuevoEmpleadoNombre" required>
+            </div>
+
+            <div class="form-group">
+                <label>Usuario</label>
+                <input id="nuevoEmpleadoUsuario" required>
+            </div>
+
+            <div class="form-group">
+                <label>Rango</label>
+                <select id="nuevoEmpleadoRango">
+                    <option value="Vendedor">Vendedor</option>
+                    <option value="Recepcionista">Recepcionista</option>
+                    <option value="Gerente">Gerente</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input type="password" id="nuevoEmpleadoPassword" required>
+            </div>
+
+            <div class="full">
+                <button class="action-button" type="submit">Añadir empleado</button>
+            </div>
+        </form>
+    ` : "";
 
     contenido.innerHTML = `
 
@@ -860,6 +918,11 @@ async function mostrarEmpleados() {
                 Empleados registrados en el comercio.
             </p>
 
+            <div class="permisos-grid">
+                ${permisosHtml}
+            </div>
+
+            ${formularioEmpleado}
 
             <div class="table-container">
 
@@ -881,6 +944,14 @@ async function mostrarEmpleados() {
                                 Rango
                             </th>
 
+                            <th>
+                                Estado clave
+                            </th>
+
+                            <th>
+                                Acciones
+                            </th>
+
                         </tr>
 
                     </thead>
@@ -900,6 +971,118 @@ async function mostrarEmpleados() {
 
     `;
 
+    const empleadoForm = document.getElementById("empleadoForm");
+    if (empleadoForm) {
+        empleadoForm.addEventListener("submit", crearEmpleado);
+    }
+
+}
+
+async function editarEmpleado(id) {
+    const respuesta = await fetch("/api/empleados");
+    const empleados = await respuesta.json();
+    const empleado = empleados.find(item => item.id === id);
+
+    if (!empleado) {
+        return;
+    }
+
+    const nombre = prompt("Nombre del empleado:", empleado.nombre);
+    if (nombre === null) {
+        return;
+    }
+
+    const usuario = prompt("Usuario:", empleado.usuario);
+    if (usuario === null) {
+        return;
+    }
+
+    const rango = prompt("Rango (Gerente, Vendedor, Recepcionista):", empleado.rango);
+    if (rango === null) {
+        return;
+    }
+
+    const nuevaPassword = prompt("Nueva contraseña (opcional, deja vacío para mantener la actual):", "");
+    if (nuevaPassword === null) {
+        return;
+    }
+
+    const payload = {
+        nombre: nombre.trim(),
+        usuario: usuario.trim(),
+        rango: rango.trim(),
+        password: nuevaPassword.trim()
+    };
+
+    const updateResponse = await fetch(`/api/empleados/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    });
+
+    const data = await updateResponse.json();
+
+    if (!updateResponse.ok) {
+        alert(data.error || "No se pudo actualizar el empleado.");
+        return;
+    }
+
+    alert(data.mensaje || "Empleado actualizado.");
+    mostrarEmpleados();
+}
+
+async function eliminarEmpleado(id) {
+    if (!confirm("¿Seguro que quieres borrar este empleado?")) {
+        return;
+    }
+
+    const respuesta = await fetch(`/api/empleados/${id}`, {
+        method: "DELETE"
+    });
+
+    const data = await respuesta.json();
+
+    if (!respuesta.ok) {
+        alert(data.error || "No se pudo borrar el empleado.");
+        return;
+    }
+
+    alert(data.mensaje || "Empleado borrado.");
+    mostrarEmpleados();
+}
+
+async function crearEmpleado(event) {
+    event.preventDefault();
+
+    const nombre = document.getElementById("nuevoEmpleadoNombre").value.trim();
+    const usuario = document.getElementById("nuevoEmpleadoUsuario").value.trim();
+    const rango = document.getElementById("nuevoEmpleadoRango").value;
+    const password = document.getElementById("nuevoEmpleadoPassword").value;
+
+    const respuesta = await fetch("/api/empleados", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            nombre,
+            usuario,
+            rango,
+            password
+        })
+    });
+
+    const data = await respuesta.json();
+
+    if (!respuesta.ok) {
+        alert(data.error || "No se pudo crear el empleado.");
+        return;
+    }
+
+    alert(`Empleado ${data.usuario} creado correctamente.`);
+    mostrarEmpleados();
 }
 
 

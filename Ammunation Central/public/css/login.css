@@ -156,6 +156,26 @@ button:hover {
 
 }
 
+@media (max-width: 500px) {
+
+    .login-box {
+        padding: 22px 18px;
+    }
+
+    .login-box h1 {
+        font-size: 22px;
+    }
+
+    .logo {
+        margin-bottom: 20px;
+    }
+
+    .login-container {
+        padding: 14px;
+    }
+
+}
+
 
 .error {
 

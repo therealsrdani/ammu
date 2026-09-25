@@ -26,18 +26,38 @@ function cargar() {
         };
     }
 
-    // Crear empleado inicial
+    if (!Array.isArray(datos.empleados)) {
+        datos.empleados = [];
+    }
+
+    if (!Array.isArray(datos.productos)) {
+        datos.productos = [];
+    }
+
+    if (!Array.isArray(datos.formularios)) {
+        datos.formularios = [];
+    }
+
     if (datos.empleados.length === 0) {
         datos.empleados.push({
             id: 1,
             usuario: "admin",
             password: bcrypt.hashSync("admin123", 10),
             nombre: "Administrador",
-            rango: "Gerente"
+            rango: "Gerente",
+            passwordTemporal: false
         });
     }
 
-    // Crear productos iniciales
+    datos.empleados = datos.empleados.map(empleado => ({
+        id: empleado.id || 1,
+        usuario: empleado.usuario || "",
+        password: empleado.password || bcrypt.hashSync("123456", 10),
+        nombre: empleado.nombre || "Empleado",
+        rango: empleado.rango || "Vendedor",
+        passwordTemporal: Boolean(empleado.passwordTemporal)
+    }));
+
     if (datos.productos.length === 0) {
         datos.productos.push(
             {

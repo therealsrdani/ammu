@@ -5,6 +5,10 @@
 }
 
 
+html {
+    font-size: 16px;
+}
+
 body {
 
     min-height: 100vh;
@@ -18,6 +22,8 @@ body {
     display: flex;
 
     flex-direction: column;
+
+    width: 100%;
 
 }
 
@@ -190,12 +196,53 @@ body {
 }
 
 
-@media (max-width: 700px) {
+@media (max-width: 900px) {
+
+    .header {
+        padding: 0 20px;
+    }
+
+    .inicio {
+        padding: 24px 18px;
+    }
+
+    .inicio-contenido h1 {
+        font-size: 32px;
+    }
 
     .accesos {
-
         grid-template-columns: 1fr;
+    }
 
+    .acceso {
+        padding: 24px 18px;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .logo {
+        font-size: 18px;
+    }
+
+    .inicio-contenido h1 {
+        font-size: 26px;
+    }
+
+    .inicio-contenido > p {
+        margin-bottom: 24px;
+    }
+
+    .acceso-icono {
+        font-size: 30px;
+        margin-bottom: 14px;
+    }
+
+    .footer {
+        font-size: 12px;
+        padding: 0 12px;
+        text-align: center;
     }
 
 }
