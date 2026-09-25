@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Panel de empleados</title>
+
+    <link
+        rel="stylesheet"
+        href="css/empleados.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+
+        <div class="logo">
+            COMERCIO
+        </div>
+
+
+        <div
+            class="empleado-info"
+            id="empleadoInfo"
+        >
+            Cargando...
+        </div>
+
+
+        <nav>
+
+
+            <button
+                onclick="mostrarSeccion('inicio')"
+            >
+                🏠 Inicio
+            </button>
+
+
+            <button
+                onclick="mostrarSeccion('stock')"
+            >
+                📦 Stock
+            </button>
+
+
+            <button
+                onclick="mostrarSeccion('productos')"
+            >
+                🛒 Productos
+            </button>
+
+
+            <button
+                onclick="mostrarSeccion('formularios')"
+            >
+                📝 Formularios
+            </button>
+
+
+            <button
+                onclick="mostrarSeccion('empleados')"
+            >
+                👥 Empleados
+            </button>
+
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+
+            <button onclick="cerrarSesion()">
+                🚪 Cerrar sesión
+            </button>
+
+
+        </div>
+
+
+    </aside>
+
+
+
+    <!-- CONTENIDO -->
+
+    <main class="content">
+
+
+        <header class="topbar">
+
+
+            <h1 id="titulo">
+                Inicio
+            </h1>
+
+
+        </header>
+
+
+        <section id="contenido">
+
+
+            <div class="card">
+
+                <h2>
+                    Bienvenido
+                </h2>
+
+                <p>
+                    Panel de gestión del comercio.
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+</div>
+
+
+<script src="js/empleados.js"></script>
+
+
+</body>
+
+</html>

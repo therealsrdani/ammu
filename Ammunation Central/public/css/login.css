@@ -1,0 +1,192 @@
+* {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+}
+
+
+body {
+
+    min-height: 100vh;
+
+    font-family: Arial, sans-serif;
+
+    background: #111;
+
+    color: white;
+
+}
+
+
+.login-container {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 20px;
+
+}
+
+
+.login-box {
+
+    width: 100%;
+
+    max-width: 400px;
+
+    padding: 35px;
+
+    background: #181818;
+
+    border: 1px solid #2c2c2c;
+
+    border-radius: 10px;
+
+}
+
+
+.logo {
+
+    text-align: center;
+
+    font-size: 22px;
+
+    font-weight: bold;
+
+    margin-bottom: 35px;
+
+}
+
+
+.login-box h1 {
+
+    font-size: 24px;
+
+    margin-bottom: 10px;
+
+}
+
+
+.descripcion {
+
+    color: #888;
+
+    margin-bottom: 30px;
+
+}
+
+
+form {
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+label {
+
+    margin-bottom: 7px;
+
+    font-size: 14px;
+
+    color: #ccc;
+
+}
+
+
+input {
+
+    padding: 12px;
+
+    margin-bottom: 20px;
+
+    border: 1px solid #333;
+
+    border-radius: 6px;
+
+    background: #101010;
+
+    color: white;
+
+    outline: none;
+
+}
+
+
+input:focus {
+
+    border-color: #666;
+
+}
+
+
+button {
+
+    padding: 12px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background: #fff;
+
+    color: #111;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+
+button:hover {
+
+    opacity: 0.9;
+
+}
+
+
+.error {
+
+    color: #e66;
+
+    margin-top: 15px;
+
+    font-size: 14px;
+
+}
+
+
+.volver {
+
+    display: block;
+
+    margin-top: 25px;
+
+    text-align: center;
+
+    color: #999;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+}
+
+
+.volver:hover {
+
+    color: white;
+
+}

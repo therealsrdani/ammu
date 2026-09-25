@@ -1,0 +1,35 @@
+{
+  "empleados": [
+    {
+      "id": 1,
+      "usuario": "admin",
+      "password": "$2b$10$ILPy8ZnHaSBkKOuu9OFOgutO3p3Qr2CmVoOBb2nPkof4Zn3KzNmQi",
+      "nombre": "Administrador",
+      "rango": "Gerente"
+    }
+  ],
+  "productos": [
+    {
+      "id": 1,
+      "nombre": "Pistola",
+      "categoria": "Armas",
+      "precio": 500,
+      "stock": 10
+    },
+    {
+      "id": 2,
+      "nombre": "Munición",
+      "categoria": "Munición",
+      "precio": 50,
+      "stock": 100
+    },
+    {
+      "id": 3,
+      "nombre": "Chaleco",
+      "categoria": "Protección",
+      "precio": 300,
+      "stock": 15
+    }
+  ],
+  "formularios": []
+}
