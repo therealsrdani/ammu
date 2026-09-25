@@ -55,9 +55,17 @@ app.use(
 
 /* -------------------------
    ARCHIVOS PÚBLICOS
+   Sirve tanto la carpeta public como la raíz para cubrir las rutas
+   de la web y evitar errores si se accede desde cualquiera de las dos estructuras.
 ------------------------- */
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(__dirname));
+app.use("/public", express.static(path.join(__dirname, "public")));
+
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 function comprobarPermiso(permiso) {
     return (req, res, next) => {
