@@ -49,7 +49,12 @@ async function comprobarSesion() {
         await fetch("/api/sesion");
 
     if (!respuesta.ok) {
-        window.location.href = "login.html";
+        const paginaActual = window.location.pathname;
+        const destino = paginaActual.includes("/public/")
+            ? "./login.html"
+            : "/public/login.html";
+
+        window.location.href = destino;
         return;
     }
 
@@ -1100,7 +1105,11 @@ async function cerrarSesion() {
     );
 
 
-    window.location.href =
-        "index.html";
+    const paginaActual = window.location.pathname;
+    const destino = paginaActual.includes("/public/")
+        ? "./index.html"
+        : "/public/index.html";
+
+    window.location.href = destino;
 
 }

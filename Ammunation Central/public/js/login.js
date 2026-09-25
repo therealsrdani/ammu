@@ -48,8 +48,12 @@ formulario.addEventListener("submit", async (event) => {
                 "Primera vez iniciando sesión. Cambia tu contraseña desde el panel.";
         }
 
-        window.location.href =
-            "empleados.html";
+        const paginaActual = window.location.pathname;
+        const destino = paginaActual.includes("/public/")
+            ? "./empleados.html"
+            : "/public/empleados.html";
+
+        window.location.href = destino;
 
     } catch (e) {
 
