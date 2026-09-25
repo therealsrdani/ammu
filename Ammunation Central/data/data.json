@@ -5,23 +5,23 @@
       "usuario": "admin",
       "password": "$2b$10$ILPy8ZnHaSBkKOuu9OFOgutO3p3Qr2CmVoOBb2nPkof4Zn3KzNmQi",
       "nombre": "Administrador",
-      "rango": "Gerente",
+      "rango": "Jefe",
       "passwordTemporal": false
     },
     {
       "id": 2,
-      "usuario": "ana",
-      "password": "$2b$10$GczSqtWYFc0152cM9t15c.OVVmIkoF1vnjkLCe/K6FrZWaFgHzAYe",
-      "nombre": "Ana Lopez",
-      "rango": "Vendedor",
-      "passwordTemporal": false
+      "usuario": "alex",
+      "password": "$2b$10$3hy2juNGmRFQIEl4KWEJNe.mKql1IGQMOAh33j9NzRCrY5QM3UcH.",
+      "nombre": "Alex Guerra",
+      "rango": "Jefe",
+      "passwordTemporal": true
     },
     {
       "id": 3,
-      "usuario": "beto",
-      "password": "$2b$10$r29ZjxwfGPzwF55.Fkhezuvfaf6nqtD7vYl5nK6aqVzq7yElg8wdy",
-      "nombre": "Beto Ruiz",
-      "rango": "Recepcionista",
+      "usuario": "sara",
+      "password": "$2b$10$rlbQ/ghTOYANO5qUoOFZE.asVoBv6xcEVAqLDOv/YAqHuZuLioTHe",
+      "nombre": "Sara Fernandez",
+      "rango": "Encargado",
       "passwordTemporal": true
     }
   ],
